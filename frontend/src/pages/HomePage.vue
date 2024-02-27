@@ -5,7 +5,7 @@
                 <img src="" width="100%" height="100%" style="background-color: #eee;" alt="">
                 <div class="postInfo">
                     <div class="postMeta">
-                        <img src="" class="avatar" alt="">
+                        <Avatar />
                         <span>Cheng Yu Fon</span>
                         <span class="postPubDate">12小時前發布</span>
                         <div class="postActions">
@@ -30,7 +30,7 @@
                 <img src="" width="100%" height="100%" style="background-color: #eee;" alt="">
                 <div class="postInfo">
                     <div class="postMeta">
-                        <img src="" class="avatar" alt="">
+                        <Avatar />
                         <span>Cheng Yu Fon</span>
                         <span class="postPubDate">12小時前發布</span>
                         <div class="postActions">
@@ -54,6 +54,7 @@
 </template>
 <script setup lang="ts">
 import TheIcon from '../components/TheIcon.vue';
+import Avatar from '../components/base/Avatar.vue';
 
 
 </script>
@@ -93,10 +94,6 @@ import TheIcon from '../components/TheIcon.vue';
 
 .postMeta .avatar {
     grid-area: avatar;
-    width: 34px;
-    height: 34px;
-    background-color: #eee;
-    border-radius: 50%;
 }
 
 .postMeta .postPubDate {

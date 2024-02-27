@@ -16,7 +16,7 @@
             </button>
             <!-- dropdown -->
             <div class="profileDropDown">
-                <img src="../../assets/avatarDefault.png" width="42px" height="42px" alt="">
+                <Avatar :width="42" :height="42" style="cursor: pointer;" />
                 <div class="dropdownMenu" v-show="showDropdown" @click="showDropdown = false">
                     <ul class="profileMenu">
                         <li><router-link to="/profile">個人主頁</router-link></li>
@@ -31,6 +31,7 @@
 import TheIcon from "../TheIcon.vue";
 
 import { ref } from "vue";
+import Avatar from "./Avatar.vue";
 
 const showDropdown = ref(false);
 
