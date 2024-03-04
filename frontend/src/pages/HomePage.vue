@@ -8,23 +8,21 @@
                         <Avatar />
                         <span>Cheng Yu Fon</span>
                         <span class="postPubDate">12小時前發布</span>
-                        <div class="postActions">
-                            <TheIcon icon="like" fill="none" stroke="#00000" /><span>1.5w</span>
-                            <TheIcon icon="comment" fill="none" stroke="#00000" /><span>1.5w</span>
-                            <TheIcon icon="favorite" fill="none" /><span>1.5w</span>
-                        </div>
+                        <PostActions />
                     </div>
                 </div>
 
                 <div class="postDesc">
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum quam debitis omnis nesciunt, adipisci
-                        natus iusto vero odit culpa aperiam temporibus eaque iste cupiditate esse repellat, unde fuga! Dicta
-                        facilis distinctio aperiam earum est! Quia, ad, at itaque assumenda sapiente animi nulla vitae quos
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum quam debitis omnis nesciunt,
+                        adipisci
+                        natus iusto vero odit culpa aperiam temporibus eaque iste cupiditate esse repellat, unde fuga!
+                        Dicta
+                        facilis distinctio aperiam earum est! Quia, ad, at itaque assumenda sapiente animi nulla vitae
+                        quos
                         veniam illum doloribus dolores dicta autem?</p>
                 </div>
 
             </div>
-
 
             <div class="postItem">
                 <img src="" width="100%" height="100%" style="background-color: #eee;" alt="">
@@ -42,22 +40,30 @@
                 </div>
 
                 <div class="postDesc">
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum quam debitis omnis nesciunt, adipisci
-                        natus iusto vero odit culpa aperiam temporibus eaque iste cupiditate esse repellat, unde fuga! Dicta
-                        facilis distinctio aperiam earum est! Quia, ad, at itaque assumenda sapiente animi nulla vitae quos
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum quam debitis omnis nesciunt,
+                        adipisci
+                        natus iusto vero odit culpa aperiam temporibus eaque iste cupiditate esse repellat, unde fuga!
+                        Dicta
+                        facilis distinctio aperiam earum est! Quia, ad, at itaque assumenda sapiente animi nulla vitae
+                        quos
                         veniam illum doloribus dolores dicta autem?</p>
                 </div>
 
             </div>
         </div>
+        <!-- <PostDetails /> -->
+        <PostUpload />
     </div>
 </template>
+
 <script setup lang="ts">
+import PostActions from '../components/PostActions.vue';
+import PostDetails from '../components/PostDetails.vue';
+import PostUpload from '../components/PostUpload.vue';
 import TheIcon from '../components/TheIcon.vue';
 import Avatar from '../components/base/Avatar.vue';
-
-
 </script>
+
 <style scoped>
 .content {
     width: 80vw;
@@ -134,5 +140,9 @@ import Avatar from '../components/base/Avatar.vue';
 .postActions>span {
     font-size: 14px;
 }
+
+.postActions {
+    grid-area: actions;
+    justify-self: end;
+}
 </style>
-  
