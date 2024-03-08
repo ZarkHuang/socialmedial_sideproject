@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar">
         <router-link to="/" style="text-decoration: none;">
-            <p class="logo">SideProject</p>
+            <p class="logo">test</p>
         </router-link>
         <div class="searchInput">
             <input type="text" />
@@ -27,6 +27,7 @@
         </div>
     </nav>
 </template>
+
 <script setup lang="ts">
 import TheIcon from "../TheIcon.vue";
 
@@ -36,6 +37,7 @@ import Avatar from "./Avatar.vue";
 const showDropdown = ref(false);
 
 </script>
+
 <style scoped>
 .navbar {
     width: 80vw;

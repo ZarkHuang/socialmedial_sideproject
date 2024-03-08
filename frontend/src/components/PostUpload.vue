@@ -3,7 +3,8 @@
         <div class="postUpload">
             <label class="upload">
                 <!-- <img v-if="imageObjUrl" :src="imageObjUrl" class="preview" /> -->
-                <TheIcon icon="posts" />
+                <img src="../assets/imageIcon.svg" class="preview" alt="">
+                <!-- <TheIcon icon="posts" /> -->
                 <input type="file" accept="image/*" class="fileChooser" />
             </label>
             <div class="postContent">
@@ -18,6 +19,7 @@
 <script setup>
 import TheModal from "./TheModal.vue"
 import TheIcon from "./TheIcon.vue"
+import TheButton from "./TheButton.vue";
 </script>
 
 
@@ -30,8 +32,8 @@ import TheIcon from "./TheIcon.vue"
 }
 
 .preview {
-    width: 100%;
-    height: 100%;
+    width: 50%;
+    height: 50%;
     object-fit: cover;
     min-height: 0;
 }
@@ -72,8 +74,6 @@ import TheIcon from "./TheIcon.vue"
     justify-self: end;
     position: relative;
     right: 24px;
-    bottom: 18px;
-    background-color: lightblue;
-    padding: 5px 10px;
+    bottom: 32px;
 }
 </style>
