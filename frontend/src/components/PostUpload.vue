@@ -1,27 +1,63 @@
 <template>
-    <TheModal>
+    <TheModal @close="closeModal">
         <div class="postUpload">
             <label class="upload">
-                <!-- <img v-if="imageObjUrl" :src="imageObjUrl" class="preview" /> -->
-                <img src="../assets/imageIcon.svg" class="preview" alt="">
-                <!-- <TheIcon icon="posts" /> -->
-                <input type="file" accept="image/*" class="fileChooser" />
+                <img v-if="imageObjUrl" :src="imageObjUrl" class="preview" />
+                <img v-else src="../assets/imageIcon.svg" class="preview" alt="" />
+                <!-- <TheIcon v-else icon="posts" /> -->
+                <input type="file" accept="image/*" class="fileChooser" @change="handleImageUpload" />
             </label>
             <div class="postContent">
-                <textarea placeholder="say something....." class="postContentInput"></textarea>
-                <TheButton class="pubBtn">確定</TheButton>
+                <textarea placeholder="say something....." class="postContentInput" v-model="description"></textarea>
+                <TheButton class="pubBtn" @click="publishPost">確定</TheButton>
             </div>
         </div>
     </TheModal>
 </template>
 
-
 <script setup>
-import TheModal from "./TheModal.vue"
-import TheIcon from "./TheIcon.vue"
+import { ref } from 'vue';
+import TheModal from "./TheModal.vue";
+import TheIcon from "./TheIcon.vue";
 import TheButton from "./TheButton.vue";
-</script>
+import { useMainStore } from '../store/index';
+import { usePostStore } from '../store/post/index.js';
 
+const mainStore = useMainStore();
+const postStore = usePostStore();
+const imageObjUrl = ref('');
+const description = ref('');
+const image = ref(null);
+
+const closeModal = () => {
+    mainStore.changeShowPostUpload(false);
+}
+
+const handleImageUpload = (e) => {
+    const imageFile = e.target.files[0];
+    if (imageFile) {
+        imageObjUrl.value = URL.createObjectURL(imageFile);
+        image.value = imageFile;
+    }
+};
+
+const publishPost = async () => {
+    if (!image.value || description.value.trim() === '') {
+        alert('Please add an image and a description.');
+        return;
+    }
+
+    try {
+        await postStore.uploadPost(image.value, description.value);
+        alert('Post published successfully!');
+        closeModal();
+    } catch (error) {
+        console.error('Failed to publish the post:', error);
+        alert('Failed to publish the post. Please try again.');
+    }
+};
+
+</script>
 
 <style scoped>
 .postUpload {

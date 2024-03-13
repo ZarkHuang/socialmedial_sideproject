@@ -33,20 +33,17 @@
       "type": "password",
       "minLength": 6,
       "configurable": false,
-      "private": true,
-      "searchable": false
+      "private": true
     },
     "resetPasswordToken": {
       "type": "string",
       "configurable": false,
-      "private": true,
-      "searchable": false
+      "private": true
     },
     "confirmationToken": {
       "type": "string",
       "configurable": false,
-      "private": true,
-      "searchable": false
+      "private": true
     },
     "confirmed": {
       "type": "boolean",
@@ -69,22 +66,32 @@
       "type": "string"
     },
     "intro": {
+      "type": "text"
+    },
+    "mobilePhone": {
+      "type": "string"
+    },
+    "website": {
       "type": "string"
     },
     "gender": {
       "type": "enumeration",
       "enum": [
-        "Male",
-        "Female",
-        "Other"
+        "M",
+        "F"
       ]
     },
-    "avater": {
+    "avatar": {
       "type": "string"
     },
-    "post": {
+    "favors": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
+      "target": "api::post.post"
+    },
+    "likes": {
+      "type": "relation",
+      "relation": "oneToMany",
       "target": "api::post.post"
     }
   }

@@ -1,9 +1,9 @@
 <template>
     <Teleport to="body">
-        <div class="modal">
+        <div class="modal" @click.self="$emit('close')">
             <div class="backdrop"></div>
             <div class="modalContent">
-                <button class="closeBtn">
+                <button class="closeBtn" @click="$emit('close')">
                     <TheIcon icon="close" />
                 </button>
                 <slot></slot>
@@ -14,6 +14,9 @@
 
 <script setup lang="ts">
 import TheIcon from './TheIcon.vue'
+
+defineEmits(['close'])
+
 </script>
 
 <style scoped>

@@ -1,46 +1,66 @@
 <template>
     <div class="postItem">
-        <img v-if="dogImageUrl" :src="dogImageUrl" width="100%" height="100%" style="background-color: #eee;"
-            alt="Random Dog">
+        <img :src="post.image" @click="showPostDetails(post.id)" alt="" width="100%" height="100%"
+            style="background: #eee" />
         <div class="postInfo">
             <div class="postMeta">
-                <Avatar />
-                <span>Cheng Yu Fon</span>
-                <span class="postPubDate">12小時前發布</span>
-                <PostActions />
+                <Avatar :src="post?.user?.avatar" />
+                <!-- <span>{{ post?.user?.name }}</span> -->
+                <span> {{ user.name }}</span>
+                <span class="postPubDate">{{ dateToRelative(post.publishedAt) }}</span>
+                <PostActions :likes="post.liked_bies" :comments="post.comments" :favors="post.favored_bies"
+                    :likedByMe="post.likedByMe" :favoredByMe="post.favoredByMe" @likeClick="toggleLike(post.id)"
+                    @favorClick="toggleFavor(post.id)" @commentsClick="showPostDetails(post.id)" />
+            </div>
+            <div class="postDesc">
+                <p>{{ post.description }}</p>
             </div>
         </div>
-
-        <div class="postDesc">
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Earum quam debitis omnis nesciunt,
-                adipisci
-                natus iusto vero odit culpa aperiam temporibus eaque iste cupiditate esse repellat, unde fuga!
-                Dicta
-                facilis distinctio aperiam earum est! Quia, ad, at itaque assumenda sapiente animi nulla vitae
-                quos
-                veniam illum doloribus dolores dicta autem?</p>
-        </div>
-
     </div>
 </template>
 
-<script setup lang="ts">
-
-import { onMounted, ref } from 'vue';
+<script setup>
 import PostActions from '../components/PostActions.vue';
 import Avatar from '../components/base/Avatar.vue';
+import { dateToRelative } from '../utils/date.js'
+import { usePostStore } from '../store/post/index.js'
+import { useMainStore } from '../store/index.js'
+import { ref, onMounted } from 'vue'
+
+const props = defineProps({
+    post: {
+        type: Object,
+        default: () => ({}),
+    },
+});
+
+const user = ref({});
+const mainStore = useMainStore()
+const postStore = usePostStore()
 
 
-const dogImageUrl = ref(null)
-onMounted(async () => {
-    const response = await fetch('https://dog.ceo/api/breeds/image/random')
-    // console.log(response)
-    const data = await response.json()
-    dogImageUrl.value = data.message
-})
+const toggleLike = (id) => {
+    postStore.toggleLike(id)
+}
+
+const toggleFavor = (id) => {
+    postStore.toggleFavor(id)
+}
+
+const showPostDetails = (id) => {
+    postStore.setCurrentId(id);
+    mainStore.changeShowPostDetails(true);
+}
+
+onMounted(() => {
+    postStore.loadAllPosts()
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+        user.value = JSON.parse(storedUser);
+    }
+});
 
 </script>
-
 <style scoped>
 .postItem {
     box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.08);
@@ -68,6 +88,11 @@ onMounted(async () => {
     row-gap: 6px;
 }
 
+.postMeta span {
+    display: flex;
+    align-items: center;
+}
+
 .postMeta .avatar {
     grid-area: avatar;
 }
@@ -78,35 +103,13 @@ onMounted(async () => {
     font-size: 14px;
 }
 
+.postActions {
+    grid-area: actions;
+    justify-self: end;
+}
+
 .postDesc {
     margin-top: 28px;
     white-space: pre-line;
-    padding: 0 24px;
-}
-
-.postActions {
-    grid-area: actions;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    justify-items: center;
-    justify-self: end;
-    column-gap: 16px;
-    row-gap: 4px;
-}
-
-.postActions>svg {
-    width: 32px;
-    height: 32px;
-    grid-row: 1 / 2;
-    cursor: pointer;
-}
-
-.postActions>span {
-    font-size: 14px;
-}
-
-.postActions {
-    grid-area: actions;
-    justify-self: end;
 }
 </style>

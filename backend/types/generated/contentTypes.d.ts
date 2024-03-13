@@ -368,18 +368,19 @@ export interface ApiCommentComment extends Schema.CollectionType {
     singularName: 'comment';
     pluralName: 'comments';
     displayName: 'Comment';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    content: Attribute.String;
+    content: Attribute.Text;
     post: Attribute.Relation<
       'api::comment.comment',
-      'oneToOne',
+      'manyToOne',
       'api::post.post'
     >;
-    users_permissions_user: Attribute.Relation<
+    user: Attribute.Relation<
       'api::comment.comment',
       'oneToOne',
       'plugin::users-permissions.user'
@@ -415,25 +416,25 @@ export interface ApiPostPost extends Schema.CollectionType {
   };
   attributes: {
     image: Attribute.Media;
-    description: Attribute.String;
+    description: Attribute.Text;
     comments: Attribute.Relation<
       'api::post.post',
-      'oneToOne',
+      'oneToMany',
       'api::comment.comment'
     >;
-    vavered_bies: Attribute.Relation<
+    user: Attribute.Relation<
       'api::post.post',
       'oneToOne',
       'plugin::users-permissions.user'
     >;
     liked_bies: Attribute.Relation<
       'api::post.post',
-      'oneToOne',
+      'manyToMany',
       'plugin::users-permissions.user'
     >;
-    user: Attribute.Relation<
+    favored_bies: Attribute.Relation<
       'api::post.post',
-      'oneToOne',
+      'manyToMany',
       'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
@@ -803,12 +804,19 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.role'
     >;
     name: Attribute.String;
-    intro: Attribute.String;
-    gender: Attribute.Enumeration<['Male', 'Female', 'Other']>;
-    avater: Attribute.String;
-    post: Attribute.Relation<
+    intro: Attribute.Text;
+    mobilePhone: Attribute.String;
+    website: Attribute.String;
+    gender: Attribute.Enumeration<['M', 'F']>;
+    avatar: Attribute.String;
+    favors: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
+      'oneToMany',
+      'api::post.post'
+    >;
+    likes: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
       'api::post.post'
     >;
     createdAt: Attribute.DateTime;

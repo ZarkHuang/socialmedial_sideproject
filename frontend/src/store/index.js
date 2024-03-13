@@ -1,15 +1,17 @@
-// src/store/userStore.ts
+// src/store/mainStore.ts
 import { defineStore } from "pinia";
 
-export const useUserStore = defineStore("user", {
-  // state, actions, getters
+export const useMainStore = defineStore("main", {
   state: () => ({
-    // define your state
+    showPostUpload: false,
+    showPostDetails: false,
   }),
   actions: {
-    // define your actions
-  },
-  getters: {
-    // define your getters
+    changeShowPostUpload(show) {
+      this.showPostUpload = show;
+    },
+    changeShowPostDetails(show) {
+      this.showPostDetails = show;
+    },
   },
 });

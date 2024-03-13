@@ -1,14 +1,13 @@
 <template>
-    <TheModal>
+    <TheModal @close="closeMoal">
         <div class="postDetails">
             <img class="postImage" src="../assets/test.jpg" alt="" />
             <div class="postMeta">
                 <div class="author">
-                    <TheAvatar />
-                    <span>Zark Huang</span>
+                    <TheAvatar :src="post.user?.avatar" />
+                    <span> {{ user.name }}</span>
                 </div>
-                <pre class="postDesc">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias, ex?
-        </pre>
+                <pre class="postDesc">{{ post.description }}</pre>
                 <div class="comments">
                     <div class="comment" v-for="n in 10">
                         <TheAvatar />
@@ -18,10 +17,12 @@
                     </div>
                 </div>
                 <div class="actions">
-                    <PostActions />
-                    <span class="postPubDate">03/04</span>
+                    <PostActions :likes="post.liked_bies" :comments="post.comments" :favors="post.favored_bies"
+                        :likedByMe="post.likedByMe" :favoredByMe="post.favoredByMe" @likeClick="toggleLike(post.id)"
+                        @favorClick="toggleFavor(post.id)" @commentsClick="showPostDetails(post.id)" />
+                    <span class="postPubDate">{{ dateToRelative(post.publishedAt) }}</span>
                     <input type="text" name="comment" id="" class="commentInput" placeholder="留言" />
-                    <button class="commentPubBtn">
+                    <button @click="addComment" class="commentPubBtn">
                         確定
                     </button>
                 </div>
@@ -30,11 +31,50 @@
     </TheModal>
 </template>
 
-<script setup lang="ts">
-import TheAvatar from './base/Avatar.vue'
-import PostActions from './PostActions.vue'
-import TheModal from './TheModal.vue'
-</script>
+<script setup>
+import { ref, onMounted } from 'vue';
+import TheAvatar from "../components/base/Avatar.vue";
+import PostActions from "./PostActions.vue";
+import TheModal from "./TheModal.vue";
+import { usePostStore } from '../store/post/index.js';
+import { useMainStore } from '../store/index.js';
+import { dateToRelative } from "../utils/date";
+
+
+
+const user = ref({});
+const postStore = usePostStore();
+const mainStore = useMainStore();
+const content = ref("");
+const post = ref(postStore.postDetails);
+const comments = ref([]);
+
+const toggleLike = (id) => {
+    postStore.toggleLike(id);
+};
+
+const toggleFavor = (id) => {
+    postStore.toggleFavor(id);
+};
+
+const closeMoal = () => {
+    mainStore.changeShowPostDetails(false);
+}
+
+// 添加评论的方法
+const addComment = () => {
+    postStore.addComment({ content: content.value, postId: postStore.currentId });
+    content.value = '';
+};
+
+onMounted(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+        user.value = JSON.parse(storedUser);
+    }
+});
+
+</script>>
 
 <style scoped>
 .postDetails {
@@ -71,6 +111,7 @@ import TheModal from './TheModal.vue'
     width: 100%;
     white-space: pre-wrap;
     margin-top: 24px;
+    margin-bottom: 24px;
 }
 
 .comments {

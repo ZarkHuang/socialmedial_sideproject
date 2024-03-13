@@ -19,32 +19,34 @@
       "allowedTypes": [
         "images",
         "files",
-        "videos",
-        "audios"
+        "videos"
       ]
     },
     "description": {
-      "type": "string"
+      "type": "text"
     },
     "comments": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::comment.comment"
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "post"
     },
-    "vavered_bies": {
+    "user": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
     },
     "liked_bies": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "likes"
     },
-    "user": {
+    "favored_bies": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "favors"
     }
   }
 }

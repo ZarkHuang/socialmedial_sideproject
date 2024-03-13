@@ -11,7 +11,7 @@
             <router-link to="/">
                 <TheIcon icon="home" />
             </router-link>
-            <button>
+            <button @click="publishPost()">
                 <TheIcon icon="publish" />
             </button>
             <!-- dropdown -->
@@ -33,8 +33,15 @@ import TheIcon from "../TheIcon.vue";
 
 import { ref } from "vue";
 import Avatar from "./Avatar.vue";
+import { useMainStore } from '../../store/index'
 
+const mainStore = useMainStore()
 const showDropdown = ref(false);
+
+const publishPost = () => {
+    mainStore.changeShowPostUpload(!mainStore.showPostUpload);
+}
+
 
 </script>
 
