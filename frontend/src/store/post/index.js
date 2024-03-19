@@ -1,5 +1,11 @@
 import { defineStore } from "pinia";
-import { createPost, loadPosts, likePost, favorPost } from "../../apis/post";
+import {
+  createPost,
+  loadPosts,
+  likePost,
+  favorPost,
+  loadPostsLikedOrFavoredByMe,
+} from "../../apis/post";
 
 export const usePostStore = defineStore("post", {
   state: () => ({
@@ -22,21 +28,30 @@ export const usePostStore = defineStore("post", {
       if (postIndex !== -1) {
         const post = this.list[postIndex];
         post.likedByMe = updatedStatus;
+
+        post.liked_bies = updatedStatus
+          ? post.liked_bies + 1
+          : Math.max(post.liked_bies - 1, 0);
+        this.list = [...this.list];
       }
     },
     async toggleFavor(id) {
-      const updatedStatus = await favorPost(id); // 同上，假设这会返回最新的 favored 状态
+      const updatedStatus = await favorPost(id);
       const postIndex = this.list.findIndex((post) => post.id === id);
       if (postIndex !== -1) {
         const post = this.list[postIndex];
-        post.favoredByMe = updatedStatus; // 更新收藏状态
-        // 更新收藏数
+        post.favoredByMe = updatedStatus;
         post.favored_bies = updatedStatus
           ? post.favored_bies + 1
           : Math.max(post.favored_bies - 1, 0);
-        // 为了触发响应式更新，重新赋值 list
         this.list = [...this.list];
       }
+    },
+    async loadLikedPosts() {
+      this.liked = await loadPostsLikedOrFavoredByMe("likes");
+    },
+    async loadFavoredPosts() {
+      this.favored = await loadPostsLikedOrFavoredByMe("favors");
     },
     setCurrentId(id) {
       this.currentId = id;

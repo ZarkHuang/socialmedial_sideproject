@@ -1,6 +1,7 @@
 // src/stores/userStore.js
 import { defineStore } from "pinia";
-import { register, login, logout, getUser, setJwtToken } from "@/apis/auth";
+import { register, login, logout, getUser } from "@/apis/auth";
+import { changeUser } from "../../apis/user";
 
 export const useUserStore = defineStore("user", {
   state: () => ({

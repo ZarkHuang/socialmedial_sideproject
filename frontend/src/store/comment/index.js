@@ -8,7 +8,7 @@ export const useCommentStore = defineStore("comment", {
   actions: {
     async addComment(content, postId) {
       await createComment(content, postId);
-      await this.loadAllComments(postId); // 直接调用另一个 action
+      await this.loadAllComments(postId);
     },
     async loadAllComments(postId) {
       const comments = await loadComments(postId);

@@ -1,26 +1,27 @@
 <template>
     <nav class="navbar">
-        <router-link to="/" style="text-decoration: none;">
+        <router-link to="/">
             <p class="logo">test</p>
         </router-link>
         <div class="searchInput">
-            <input type="text" />
+            <input type="text" @change="searchPosts" />
             <TheIcon icon="search" />
         </div>
         <div class="navItems">
             <router-link to="/">
                 <TheIcon icon="home" />
             </router-link>
-            <button @click="publishPost()">
+            <button @click="publishPost">
                 <TheIcon icon="publish" />
             </button>
             <!-- dropdown -->
             <div class="profileDropDown">
-                <Avatar :width="42" :height="42" style="cursor: pointer;" />
-                <div class="dropdownMenu" v-show="showDropdown" @click="showDropdown = false">
+                <TheAvatar :width="42" :height="42" style="cursor: pointer" @click="toggleDropdown"
+                    :src="user.avatar" />
+                <div class="dropdownMenu" v-show="showDropdown" @click="toggleDropdown">
                     <ul class="profileMenu">
                         <li><router-link to="/profile">個人主頁</router-link></li>
-                        <li>Logout</li>
+                        <li @click="logout">登出</li>
                     </ul>
                 </div>
             </div>
@@ -28,22 +29,43 @@
     </nav>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import TheIcon from "../TheIcon.vue";
-
+import TheAvatar from "./Avatar.vue";
+import { useUserStore } from '@/store/user/index.js';
+import { usePostStore } from '@/store/post/index.js';
+import { useMainStore } from '@/store/index.js';
+import { useRouter } from "vue-router";
 import { ref } from "vue";
-import Avatar from "./Avatar.vue";
-import { useMainStore } from '../../store/index'
 
-const mainStore = useMainStore()
+const userStore = useUserStore();
+const postStore = usePostStore();
+const mainStore = useMainStore();
+const router = useRouter();
 const showDropdown = ref(false);
 
-const publishPost = () => {
-    mainStore.changeShowPostUpload(!mainStore.showPostUpload);
+const user = userStore.user;
+
+function toggleDropdown() {
+    showDropdown.value = !showDropdown.value;
 }
 
+function publishPost() {
+    mainStore.changeShowPostUpload(true); // Use the correct method name as defined in your store
+}
 
+async function searchPosts(e) {
+    await postStore.searchPosts(e.target.value);
+    router.push({ name: "search_result", params: { term: e.target.value } });
+}
+
+async function logout() {
+    await userStore.logoutUser();
+    router.push("/login");
+}
 </script>
+
+
 
 <style scoped>
 .navbar {

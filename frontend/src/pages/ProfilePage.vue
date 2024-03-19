@@ -1,46 +1,83 @@
 <template>
     <div>
         <div class="profileContainer">
-            <Avatar width="100px" height="100px" />
+            <TheAvatar :width="186" :height="186" :src="user.avatar" />
             <div class="profile">
                 <p class="name">
-                    <span>Zark Huang</span><router-link to="/profile/edit">編輯資料</router-link>
+                    <span>{{ user.name }}</span><router-link to="/profile/edit">編輯資料</router-link>
                 </p>
-                <p class="handle">@zark2345</p>
+                <p class="handle">@{{ user.username }}</p>
                 <div class="description">
-                    <pre>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, temporibus!</pre>
+                    <pre>{{ user.intro }}</pre>
                 </div>
-                <p class="website">http://www.yahoo.com.tw</p>
+                <p class="website">{{ user.website }}</p>
             </div>
         </div>
         <div class="tabs">
-            <div class="tab active">
-                <TheIcon icon="posts" />
-                <p>por</p>
-            </div>
-            <div class="tab">
-                <TheIcon icon="like" />
-                <p>cone</p>
-            </div>
-            <div class="tab">
-                <TheIcon icon="favorite" />
-                <p>push</p>
+            <div v-for="(tab, index) in tabs" class="tab" :class="{ active: index === currentTab }" :key="index"
+                @click="currentTab = index">
+                <TheIcon :icon="tab.icon" />
+                <p>{{ tab.label }}</p>
             </div>
         </div>
         <div class="tabContent">
-            <p>162篇內容</p>
+            <p>{{ myPosts.length }}</p>
             <div class="posts">
-                <img src="" class="postImage" v-for="n in 9" />
+                <img v-for="post in myPosts" :src="post.image" :key="post.id" class="postImage" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-
+import { ref, watch, onMounted } from 'vue';
 import TheIcon from '../components/TheIcon.vue';
-import Avatar from '../components/base/Avatar.vue'
+import TheAvatar from '../components/base/Avatar.vue';
+import { useUserStore } from '@/store/user/index.js';
+import { usePostStore } from '@/store/post/index.js';
 
+const userStore = useUserStore();
+const postStore = usePostStore();
+
+const user = ref(userStore.user);
+
+const tabs = ref([
+    { label: 'List', icon: 'posts' },
+    { label: 'Like', icon: 'like' },
+    { label: 'Favor', icon: 'favorite' },
+]);
+
+const currentTab = ref(0);
+const myPosts = ref([]);
+
+watch(currentTab, async () => {
+    myPosts.value = [];
+
+    switch (currentTab.value) {
+        case 0:
+            await postStore.loadAllPosts();
+            myPosts.value = postStore.list;
+            break;
+        case 1:
+            await postStore.loadLikedPosts();
+            myPosts.value = postStore.liked;
+            break;
+        case 2:
+            await postStore.loadFavoredPosts();
+            myPosts.value = postStore.favored;
+            break;
+    }
+}, { immediate: true });
+
+onMounted(async () => {
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+        user.value = JSON.parse(storedUser);
+        userStore.updateUser(user.value);
+    }
+    await postStore.loadAllPosts();
+});
 </script>
 
 <style scoped>
