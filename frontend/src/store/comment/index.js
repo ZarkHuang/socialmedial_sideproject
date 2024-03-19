@@ -1,6 +1,5 @@
-// src/stores/commentStore.ts
 import { defineStore } from "pinia";
-import { createComment, loadComments } from "../apis/comment";
+import { createComment, loadComments } from "../../apis/comment";
 
 export const useCommentStore = defineStore("comment", {
   state: () => ({
@@ -9,9 +8,7 @@ export const useCommentStore = defineStore("comment", {
   actions: {
     async addComment(content, postId) {
       await createComment(content, postId);
-      this.loadAllComments(postId);
-      dispatch("loadAllComments", postId);
-      commit("increaseCommentCount", postId);
+      await this.loadAllComments(postId); // 直接调用另一个 action
     },
     async loadAllComments(postId) {
       const comments = await loadComments(postId);

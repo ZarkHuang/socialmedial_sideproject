@@ -1,19 +1,21 @@
 <template>
     <TheModal @close="closeMoal">
         <div class="postDetails">
-            <img class="postImage" src="../assets/test.jpg" alt="" />
+            <img class="postImage" :src="post.image" alt="" />
             <div class="postMeta">
                 <div class="author">
                     <TheAvatar :src="post.user?.avatar" />
-                    <span> {{ user.name }}</span>
+                    <span> {{ user.name }}asdasd</span>
                 </div>
                 <pre class="postDesc">{{ post.description }}</pre>
                 <div class="comments">
-                    <div class="comment" v-for="n in 10">
-                        <TheAvatar />
-                        <span class="user">機器人一號</span>
-                        <span class="commentDate">03/04</span>
-                        <p class="commentContent">Lorem ipsum dolor sit amet.</p>
+                    <div class="comment" v-for="comment in comments">
+                        <TheAvatar :src="comment.user?.avatar" />
+                        <span class="user">{{ comment.user?.name }}</span>
+                        <span class="commentDate">{{
+        dateToRelative(comment.pubDate)
+    }}</span>
+                        <p class="commentContent">{{ comment.content }}</p>
                     </div>
                 </div>
                 <div class="actions">
@@ -21,7 +23,7 @@
                         :likedByMe="post.likedByMe" :favoredByMe="post.favoredByMe" @likeClick="toggleLike(post.id)"
                         @favorClick="toggleFavor(post.id)" @commentsClick="showPostDetails(post.id)" />
                     <span class="postPubDate">{{ dateToRelative(post.publishedAt) }}</span>
-                    <input type="text" name="comment" id="" class="commentInput" placeholder="留言" />
+                    <input type="text" name="comment" v-model="content" id="" class="commentInput" placeholder="留言！" />
                     <button @click="addComment" class="commentPubBtn">
                         確定
                     </button>
@@ -40,11 +42,13 @@ import { usePostStore } from '../store/post/index.js';
 import { useMainStore } from '../store/index.js';
 import { dateToRelative } from "../utils/date";
 
-
+import { useCommentStore } from '@/store/comment/index.js';
 
 const user = ref({});
 const postStore = usePostStore();
 const mainStore = useMainStore();
+const commentStore = useCommentStore();
+
 const content = ref("");
 const post = ref(postStore.postDetails);
 const comments = ref([]);
@@ -61,20 +65,35 @@ const closeMoal = () => {
     mainStore.changeShowPostDetails(false);
 }
 
-// 添加评论的方法
-const addComment = () => {
-    postStore.addComment({ content: content.value, postId: postStore.currentId });
-    content.value = '';
+const addComment = async () => {
+    if (content.value.trim() && post.value.id) {
+        await commentStore.addComment(content.value, post.value.id);
+        content.value = '';
+        await loadCommentsForPost(); // 重新加载评论
+        // 更新 post.comments 为最新评论的数量
+        post.value.comments = comments.value.length;
+    }
 };
+
+
+const loadCommentsForPost = async () => {
+    if (post.value.id) {
+        await commentStore.loadAllComments(post.value.id);
+        comments.value = commentStore.list;
+    }
+};
+
 
 onMounted(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
         user.value = JSON.parse(storedUser);
     }
+    loadCommentsForPost();
 });
 
 </script>>
+
 
 <style scoped>
 .postDetails {
