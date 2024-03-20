@@ -7,17 +7,17 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:1337",
+        target: "http://127.0.0.1:1337",
         changeOrigin: true,
         secure: false,
       },
       "/upload": {
-        target: "http://localhost:1337",
+        target: "http://127.0.0.1:1337",
         changeOrigin: true,
         secure: false,
       },
       "/uploads": {
-        target: "http://localhost:1337",
+        target: "http://127.0.0.1:1337",
         changeOrigin: true,
         secure: false,
       },

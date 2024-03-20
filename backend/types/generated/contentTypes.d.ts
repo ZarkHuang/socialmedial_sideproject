@@ -775,6 +775,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
+    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -809,14 +810,14 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     website: Attribute.String;
     gender: Attribute.Enumeration<['M', 'F']>;
     avatar: Attribute.String;
-    favors: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::post.post'
-    >;
     likes: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToMany',
+      'manyToMany',
+      'api::post.post'
+    >;
+    favors: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToMany',
       'api::post.post'
     >;
     createdAt: Attribute.DateTime;

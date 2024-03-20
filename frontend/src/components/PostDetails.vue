@@ -4,8 +4,8 @@
             <img class="postImage" :src="post.image" alt="" />
             <div class="postMeta">
                 <div class="author">
-                    <TheAvatar :src="post.user?.avatar" />
-                    <span> {{ user.name }}asdasd</span>
+                    <TheAvatar :src="user?.avatar" />
+                    <span> {{ user.name }}</span>
                 </div>
                 <pre class="postDesc">{{ post.description }}</pre>
                 <div class="comments">

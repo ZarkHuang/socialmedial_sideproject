@@ -21,9 +21,9 @@
             </div>
         </div>
         <div class="tabContent">
-            <p>{{ myPosts.length }}</p>
+            <p>{{ myPosts[currentTab].length }}</p>
             <div class="posts">
-                <img v-for="post in myPosts" :src="post.image" :key="post.id" class="postImage" />
+                <img v-for="post in myPosts[currentTab]" :src="post.image" :key="post.id" class="postImage" />
             </div>
         </div>
     </div>
@@ -35,6 +35,10 @@ import TheIcon from '../components/TheIcon.vue';
 import TheAvatar from '../components/base/Avatar.vue';
 import { useUserStore } from '@/store/user/index.js';
 import { usePostStore } from '@/store/post/index.js';
+import {
+    loadPostsByMe,
+    loadPostsLikedOrFavoredByMe,
+} from "../apis/post.js";
 
 const userStore = useUserStore();
 const postStore = usePostStore();
@@ -48,29 +52,35 @@ const tabs = ref([
 ]);
 
 const currentTab = ref(0);
-const myPosts = ref([]);
-
+const myPosts = ref({
+    0: [],
+    1: [],
+    2: [],
+});
 watch(currentTab, async () => {
-    myPosts.value = [];
-
     switch (currentTab.value) {
         case 0:
-            await postStore.loadAllPosts();
-            myPosts.value = postStore.list;
+            if (myPosts.value[0].length === 0) {
+                myPosts.value[0] = await loadPostsByMe();
+            }
             break;
         case 1:
-            await postStore.loadLikedPosts();
-            myPosts.value = postStore.liked;
+            if (myPosts.value[1].length === 0) {
+                myPosts.value[1] = await loadPostsLikedOrFavoredByMe();
+                console.log("Liked posts:", myPosts.value[1]);
+            }
             break;
         case 2:
-            await postStore.loadFavoredPosts();
-            myPosts.value = postStore.favored;
+            if (myPosts.value[2].length === 0) {
+                myPosts.value[2] = await loadPostsLikedOrFavoredByMe("favors");
+            }
             break;
+        default:
+            return;
     }
 }, { immediate: true });
 
 onMounted(async () => {
-
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
         user.value = JSON.parse(storedUser);

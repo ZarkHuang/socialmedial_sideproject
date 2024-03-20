@@ -51,6 +51,7 @@ export async function loadPostsLikedOrFavoredByMe(type = "likes") {
   const response = await request(
     `/api/users/me?populate[${type}][populate][0]=image`
   );
+  console.log(response);
   return response[type].map((post) => ({
     ...post,
     image: post?.image?.[0].url,

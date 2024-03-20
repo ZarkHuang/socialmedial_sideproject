@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
@@ -28,7 +29,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "*.d.ts",
-    "src/store/post/index.js",
+    "src/store/post/index.ts",
     "src/store/user/index.js",
     "src/apis/auth.js",
     "src/utils/request.js",

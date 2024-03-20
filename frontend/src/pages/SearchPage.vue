@@ -1,18 +1,24 @@
 <template>
     <div>
-        <h2 class="title">搜尋結果：Gene</h2>
+        <h2 class="title">搜索结果：{{ term }}</h2>
         <PostList>
-            <PostItem v-for="n in 10" />
+            <PostItem v-for="post in searchResult" :key="post.id" :post="post" />
         </PostList>
-        <!-- <PostDetails />
-        <PostUpload /> -->
     </div>
 </template>
 
-<script setup lang="ts">
-import PostList from '../components/PostList.vue';
-import PostItem from '../components/PostItem.vue';
+<script setup>
+import PostList from "../components/PostList.vue";
+import PostItem from "../components/PostItem.vue";
+import { usePostStore } from "@/store/post/index.js";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
 
+const postStore = usePostStore();
+const searchResult = computed(() => postStore.searchResult);
+
+const route = useRoute();
+const term = computed(() => route.params.term);
 </script>
 
 <style scoped>

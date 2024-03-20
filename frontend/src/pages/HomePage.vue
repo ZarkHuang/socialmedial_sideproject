@@ -9,7 +9,7 @@
 </template>
 
 
-<script setup lang="ts">
+<script setup>
 import { onMounted, computed } from 'vue'
 import PostDetails from '../components/PostDetails.vue';
 import PostUpload from '../components/PostUpload.vue';
@@ -25,6 +25,7 @@ const showPostDetails = computed(() => mainStore.showPostDetails);
 const posts = computed(() => postStore.list)
 
 onMounted(async () => {
+    console.log(posts.value)
     await postStore.loadAllPosts();
 });
 </script>

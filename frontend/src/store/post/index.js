@@ -2,9 +2,9 @@ import { defineStore } from "pinia";
 import {
   createPost,
   loadPosts,
+  loadPostsLikedOrFavoredByMe,
   likePost,
   favorPost,
-  loadPostsLikedOrFavoredByMe,
 } from "../../apis/post";
 
 export const usePostStore = defineStore("post", {
@@ -12,6 +12,8 @@ export const usePostStore = defineStore("post", {
     list: [],
     searchResult: [],
     currentId: null,
+    likedPosts: [],
+    favoredPosts: [],
   }),
   actions: {
     async uploadPost(image, description) {
@@ -23,36 +25,41 @@ export const usePostStore = defineStore("post", {
       this.list = posts;
     },
     async toggleLike(id) {
-      const updatedStatus = await likePost(id);
-      const postIndex = this.list.findIndex((post) => post.id === id);
-      if (postIndex !== -1) {
-        const post = this.list[postIndex];
-        post.likedByMe = updatedStatus;
-
-        post.liked_bies = updatedStatus
-          ? post.liked_bies + 1
-          : Math.max(post.liked_bies - 1, 0);
-        this.list = [...this.list];
+      const isLike = await likePost(id);
+      const post = this.list.find((post) => post.id === id);
+      if (isLike) {
+        post.liked_bies = (post.liked_bies || 0) + 1;
+      } else {
+        post.liked_bies--;
       }
+      post.likedByMe = isLike;
     },
     async toggleFavor(id) {
-      const updatedStatus = await favorPost(id);
-      const postIndex = this.list.findIndex((post) => post.id === id);
-      if (postIndex !== -1) {
-        const post = this.list[postIndex];
-        post.favoredByMe = updatedStatus;
-        post.favored_bies = updatedStatus
-          ? post.favored_bies + 1
-          : Math.max(post.favored_bies - 1, 0);
-        this.list = [...this.list];
+      const isFavor = await favorPost(id);
+      const post = this.list.find((post) => post.id === id);
+      if (isFavor) {
+        post.favored_bies = (post.favored_bies || 0) + 1;
+      } else {
+        post.favored_bies--;
       }
+      post.favoredByMe = isFavor;
     },
     async loadLikedPosts() {
-      this.liked = await loadPostsLikedOrFavoredByMe("likes");
+      this.liked = await loadPostsLikedOrFavoredByMe();
+      console.log("Liked posts:", this.liked);
     },
     async loadFavoredPosts() {
       this.favored = await loadPostsLikedOrFavoredByMe("favors");
+      console.log("Favored posts:", this.favored);
     },
+
+    async loadLikedPosts() {
+      this.likedPosts = await loadPostsLikedOrFavoredByMe();
+    },
+    async loadFavoredPosts() {
+      this.favoredPosts = await loadPostsLikedOrFavoredByMe("favors");
+    },
+
     setCurrentId(id) {
       this.currentId = id;
     },

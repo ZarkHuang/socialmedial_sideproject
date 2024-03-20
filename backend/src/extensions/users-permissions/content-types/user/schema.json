@@ -9,7 +9,8 @@
     "displayName": "User"
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": false,
+    "timestamps": true
   },
   "attributes": {
     "username": {
@@ -84,15 +85,17 @@
     "avatar": {
       "type": "string"
     },
-    "favors": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::post.post"
-    },
     "likes": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::post.post"
+      "relation": "manyToMany",
+      "target": "api::post.post",
+      "inversedBy": "liked_bies"
+    },
+    "favors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::post.post",
+      "inversedBy": "favored_bies"
     }
   }
 }

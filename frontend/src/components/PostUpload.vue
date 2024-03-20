@@ -49,7 +49,7 @@ const publishPost = async () => {
 
     try {
         await postStore.uploadPost(image.value, description.value);
-        alert('Post published successfully!');
+        alert('發文成功！');
         closeModal();
     } catch (error) {
         console.error('Failed to publish the post:', error);
