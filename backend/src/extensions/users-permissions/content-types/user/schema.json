@@ -77,10 +77,7 @@
     },
     "gender": {
       "type": "enumeration",
-      "enum": [
-        "M",
-        "F"
-      ]
+      "enum": ["M", "F"]
     },
     "avatar": {
       "type": "string"
@@ -89,13 +86,13 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::post.post",
-      "inversedBy": "liked_bies"
+      "mappedBy": "liked_bies"
     },
     "favors": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::post.post",
-      "inversedBy": "favored_bies"
+      "mappedBy": "favored_bies"
     }
   }
 }

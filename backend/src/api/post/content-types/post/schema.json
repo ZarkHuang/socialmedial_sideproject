@@ -16,11 +16,7 @@
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos"
-      ]
+      "allowedTypes": ["images", "files", "videos"]
     },
     "description": {
       "type": "text"
@@ -40,13 +36,13 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "likes"
+      "mappedBy": "likes"
     },
     "favored_bies": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "favors"
+      "mappedBy": "favors"
     }
   }
 }
